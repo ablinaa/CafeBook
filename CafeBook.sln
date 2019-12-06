@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeBook", "CafeBook\CafeBook.csproj", "{794DF645-D535-44FC-BC22-14A564E0C2D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafeBookTests", "CafeBookTests\CafeBookTests.csproj", "{755D6DB5-7B36-4E12-83B1-C7F9ADD98CCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +15,11 @@ Global
 		{794DF645-D535-44FC-BC22-14A564E0C2D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{794DF645-D535-44FC-BC22-14A564E0C2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{794DF645-D535-44FC-BC22-14A564E0C2D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{755D6DB5-7B36-4E12-83B1-C7F9ADD98CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{755D6DB5-7B36-4E12-83B1-C7F9ADD98CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{755D6DB5-7B36-4E12-83B1-C7F9ADD98CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{755D6DB5-7B36-4E12-83B1-C7F9ADD98CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

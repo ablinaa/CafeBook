@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CafeBook.Models
@@ -8,6 +9,7 @@ namespace CafeBook.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [Remote(action:"VerifyLogin",controller:"User")]
         public string Login { get; set; }
         public string Password { get; set; }

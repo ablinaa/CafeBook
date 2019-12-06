@@ -21,11 +21,11 @@ namespace CafeBook.Models
         {
             int i = 0;
             i = Convert.ToInt32(PublishedYear);
-            if (BookType.Name.Equals("Roman") && i>=1995)
+            if (i>=1995)
             {
-                yield return new ValidationResult(
-                    $"The published year must be less than 1995",
-                    new[] { "ReleaseDate" });
+          
+
+                yield return new ValidationResult("The published year must be less than 1995");
             }
         }
     }

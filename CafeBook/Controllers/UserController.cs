@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CafeBook.Data;
 using CafeBook.Models;
+using CafeBook.Services;
 
 namespace CafeBook.Controllers
 {
     public class UserController : Controller
     {
-        private readonly CafeBookContext _context;
+        private readonly UserService _service;
 
-        public UserController(CafeBookContext context)
+        public UserController(UserService userService)
         {
-            _context = context;
+            _service = userService;
         }
 
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.User.ToListAsync());
+            var users = await _service.GetAllUser();
+            return View(users);
         }
 
         // GET: User/Details/5
@@ -33,8 +35,9 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _service.GetDetails(id);
+
+       
             if (user == null)
             {
                 return NotFound();
@@ -58,8 +61,7 @@ namespace CafeBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                await _service.AddAndSave(user);
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -73,7 +75,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
+            var user = await _service.GetDetails(id);
             if (user == null)
             {
                 return NotFound();
@@ -97,8 +99,7 @@ namespace CafeBook.Controllers
             {
                 try
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +125,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = await _service.GetDetails(id);
             if (user == null)
             {
                 return NotFound();
@@ -139,17 +139,19 @@ namespace CafeBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
+            var user = await _service.GetDetails(id);
+            await _service.Delete(user);
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-            return _context.User.Any(e => e.Id == id);
+            return _service.Exist(id);
         }
 
+
+        //REMOTE VALIDATION
         [AcceptVerbs("GET", "POST")]
         public IActionResult VerifyLogin(string login)
         {
