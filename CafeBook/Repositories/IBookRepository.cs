@@ -12,11 +12,10 @@ namespace CafeBook.Repositories
         void Add(Book book);
         void Update(Book book);
         void Delete(Book book);
-        bool Exists(int id);
         Task Save();
-        Task<List<Book>> GetAllBook();
-        Task<List<Book>> GetBooks(Expression<Func<Book, bool>> predicate);
-        Task<Book> GetDetails(int? id);
-        DbSet<BookType> GetBookTypes();
+        Task<List<Book>> GetAll();
+        Task<Book> GetDetail(int? id);
+        bool Exist(int id);
+        DbSet<BookType> GetBookType();
     }
 }

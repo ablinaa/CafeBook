@@ -3,67 +3,61 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CafeBook.Models;
 using CafeBook.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace CafeBook.Services
 {
-    public class BookService
+    public class BookTypeService
     {
-        private readonly IBookRepository _bookRepo;
-        public BookService(IBookRepository bookRepo)
+        private readonly IBookTypeRepository _repo;
+        public BookTypeService(IBookTypeRepository repo)
         {
-            _bookRepo = bookRepo;
+            _repo = repo;
         }
 
         // GET: Roles
-        public async Task<List<Book>> GetBook()
+        public async Task<List<BookType>> GetBookTypes()
         {
-            return await _bookRepo.GetAll();
+            return await _repo.GetAll();
             //return await _context.Roles.ToListAsync();
         }
 
         // GET: Roles/Details/5 and For Edit Get Role
-        public async Task<Book> DetailsBook(int? id)
+        public async Task<BookType> DetailsBookType(int? id)
         {
-            return await _bookRepo.GetDetail(id);
+            return await _repo.GetDetail(id);
             //return await _context.Roles.FirstOrDefaultAsync(m => m.Id == id);
         }
         // For last method
-        public bool BookExis(int id)
+        public bool BookTypeExis(int id)
         {
-            return _bookRepo.Exist(id);
+            return _repo.BookTypeExist(id);
             //return _context.Roles.Any(m => m.Id == id);
         }
         // POST: Roles/Create
-        public async Task AddAndSave(Book book)
+        public async Task AddAndSave(BookType bookType)
         {
-            _bookRepo.Add(book);
-            await _bookRepo.Save();
+            _repo.Add(bookType);
+            await _repo.Save();
             //_context.Roles.Add(role);
             //await _context.SaveChangesAsync();
         }
 
         // POST: Roles/Edit/5
-        public async Task Update(Book book)
+        public async Task Update(BookType bookType)
         {
-            _bookRepo.Update(book);
-            await _bookRepo.Save();
+            _repo.Update(bookType);
+            await _repo.Save();
             //_context.Roles.Update(role);
             //await _context.SaveChangesAsync();
         }
 
         // POST: Roles/Delete/5
-        public async Task Delete(Book book)
+        public async Task Delete(BookType bookType)
         {
-            _bookRepo.Delete(book);
-            await _bookRepo.Save();
+            _repo.Delete(bookType);
+            await _repo.Save();
             //_context.Roles.Remove(role);
             //await _context.SaveChangesAsync();
-        }
-
-        public DbSet<BookType> getBookType()
-        {
-            return _bookRepo.GetBookType();
         }
     }
 }

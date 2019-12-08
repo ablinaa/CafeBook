@@ -7,23 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CafeBook.Data;
 using CafeBook.Models;
+using CafeBook.Services;
 
 namespace CafeBook.Controllers
 {
     public class BookController : Controller
     {
-        private readonly CafeBookContext _context;
-
-        public BookController(CafeBookContext context)
+        private readonly BookService _bookService;
+        public BookController(BookService bookService)
         {
-            _context = context;
+            _bookService = bookService;
         }
 
         // GET: Book
         public async Task<IActionResult> Index()
         {
-            var cafeBookContext = _context.Book.Include(b => b.BookType);
-            return View(await cafeBookContext.ToListAsync());
+            var books = await _bookService.GetBook();
+            return View(books);
         }
 
         // GET: Book/Details/5
@@ -34,9 +34,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Book
-                .Include(b => b.BookType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _bookService.DetailsBook(id);
             if (book == null)
             {
                 return NotFound();
@@ -48,7 +46,7 @@ namespace CafeBook.Controllers
         // GET: Book/Create
         public IActionResult Create()
         {
-            ViewData["BookTypeId"] = new SelectList(_context.BookType, "Id", "Id");
+            ViewData["BookTypeId"] = new SelectList(_bookService.getBookType(), "Id", "Id");
             return View();
         }
 
@@ -61,11 +59,10 @@ namespace CafeBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(book);
-                await _context.SaveChangesAsync();
+                await _bookService.AddAndSave(book);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookTypeId"] = new SelectList(_context.BookType, "Id", "Id", book.BookTypeId);
+            ViewData["BookTypeId"] = new SelectList(_bookService.getBookType(), "Id", "Id", book.BookTypeId);
             return View(book);
         }
 
@@ -77,12 +74,12 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Book.FindAsync(id);
+            var book = await _bookService.DetailsBook(id);
             if (book == null)
             {
                 return NotFound();
             }
-            ViewData["BookTypeId"] = new SelectList(_context.BookType, "Id", "Id", book.BookTypeId);
+            ViewData["BookTypeId"] = new SelectList(_bookService.getBookType(), "Id", "Id", book.BookTypeId);
             return View(book);
         }
 
@@ -102,8 +99,8 @@ namespace CafeBook.Controllers
             {
                 try
                 {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
+                    await _bookService.Update(book);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,7 +115,7 @@ namespace CafeBook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookTypeId"] = new SelectList(_context.BookType, "Id", "Id", book.BookTypeId);
+            ViewData["BookTypeId"] = new SelectList(_bookService.getBookType(), "Id", "Id", book.BookTypeId);
             return View(book);
         }
 
@@ -130,9 +127,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Book
-                .Include(b => b.BookType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var book = await _bookService.DetailsBook(id);
             if (book == null)
             {
                 return NotFound();
@@ -146,15 +141,14 @@ namespace CafeBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _context.Book.FindAsync(id);
-            _context.Book.Remove(book);
-            await _context.SaveChangesAsync();
+            var book = await _bookService.DetailsBook(id);
+            await _bookService.Delete(book);
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookExists(int id)
         {
-            return _context.Book.Any(e => e.Id == id);
+            return _bookService.BookExis(id);
         }
     }
 }

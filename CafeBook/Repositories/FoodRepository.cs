@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CafeBook.Data;
 using CafeBook.Models;
@@ -9,27 +8,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CafeBook.Repositories
 {
-    public class BookRepository : IBookRepository
+    public class FoodRepository:IFoodRepository
     {
         readonly CafeBookContext _context;
-        public BookRepository(CafeBookContext context)
+        public FoodRepository(CafeBookContext context)
         {
             _context = context;
         }
 
-        public void Add(Book book)
+        public void Add(Food food)
         {
-            _context.Add(book);
+            _context.Add(food);
         }
 
-        public void Update(Book book)
+        public void Update(Food food)
         {
-            _context.Update(book);
+            _context.Update(food);
         }
 
-        public void Delete(Book book)
+        public void Delete(Food food)
         {
-            _context.Remove(book);
+            _context.Remove(food);
         }
 
         public bool Exist(int id)
@@ -37,14 +36,14 @@ namespace CafeBook.Repositories
             return _context.Book.Any(m => m.Id == id);
         }
 
-        public Task<List<Book>> GetAll()
+        public Task<List<Food>> GetFoods()
         {
-            return _context.Book.ToListAsync();
+            return _context.Food.ToListAsync();
         }
 
-        public Task<Book> GetDetail(int? id)
+        public Task<Food> GetFoodDetail(int? id)
         {
-            return _context.Book.FirstOrDefaultAsync(m => m.Id == id);
+            return _context.Food.FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public Task Save()
@@ -52,9 +51,9 @@ namespace CafeBook.Repositories
             return _context.SaveChangesAsync();
         }
 
-        public DbSet<BookType> GetBookType()
+        public DbSet<FoodType> GetFoodType()
         {
-            return _context.BookType;
+            return _context.FoodType;
         }
     }
 }

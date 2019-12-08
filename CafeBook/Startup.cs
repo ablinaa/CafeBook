@@ -32,6 +32,9 @@ namespace CafeBook
 
             services.AddScoped<BookService>();
             services.AddScoped<IBookRepository, BookRepository>();
+
+            services.AddScoped<BookTypeService>();
+            services.AddScoped<IBookTypeRepository, BookTypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

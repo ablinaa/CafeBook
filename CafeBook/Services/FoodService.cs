@@ -7,63 +7,63 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CafeBook.Services
 {
-    public class BookService
+    public class FoodService
     {
-        private readonly IBookRepository _bookRepo;
-        public BookService(IBookRepository bookRepo)
+        private readonly IFoodRepository _repo;
+        public FoodService(IFoodRepository repo)
         {
-            _bookRepo = bookRepo;
+            _repo = repo;
         }
 
         // GET: Roles
-        public async Task<List<Book>> GetBook()
+        public async Task<List<Food>> GetFoods()
         {
-            return await _bookRepo.GetAll();
+            return await _repo.GetFoods();
             //return await _context.Roles.ToListAsync();
         }
 
         // GET: Roles/Details/5 and For Edit Get Role
-        public async Task<Book> DetailsBook(int? id)
+        public async Task<Food> DetailsFood(int? id)
         {
-            return await _bookRepo.GetDetail(id);
+            return await _repo.GetFoodDetail(id);
             //return await _context.Roles.FirstOrDefaultAsync(m => m.Id == id);
         }
         // For last method
-        public bool BookExis(int id)
+        public bool FoodExis(int id)
         {
-            return _bookRepo.Exist(id);
+            return _repo.Exist(id);
             //return _context.Roles.Any(m => m.Id == id);
         }
         // POST: Roles/Create
-        public async Task AddAndSave(Book book)
+        public async Task AddAndSave(Food food)
         {
-            _bookRepo.Add(book);
-            await _bookRepo.Save();
+            _repo.Add(food);
+            await _repo.Save();
             //_context.Roles.Add(role);
             //await _context.SaveChangesAsync();
         }
 
         // POST: Roles/Edit/5
-        public async Task Update(Book book)
+        public async Task Update(Food food)
         {
-            _bookRepo.Update(book);
-            await _bookRepo.Save();
+            _repo.Update(food);
+            await _repo.Save();
             //_context.Roles.Update(role);
             //await _context.SaveChangesAsync();
         }
 
         // POST: Roles/Delete/5
-        public async Task Delete(Book book)
+        public async Task Delete(Food food)
         {
-            _bookRepo.Delete(book);
-            await _bookRepo.Save();
+            _repo.Delete(food);
+            await _repo.Save();
             //_context.Roles.Remove(role);
             //await _context.SaveChangesAsync();
         }
 
-        public DbSet<BookType> getBookType()
+        public DbSet<FoodType> getFoodType()
         {
-            return _bookRepo.GetBookType();
+            return _repo.GetFoodType();
         }
     }
 }

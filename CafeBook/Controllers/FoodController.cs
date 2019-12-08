@@ -7,23 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CafeBook.Data;
 using CafeBook.Models;
+using CafeBook.Services;
 
 namespace CafeBook.Controllers
 {
     public class FoodController : Controller
     {
-        private readonly CafeBookContext _context;
+        private readonly FoodService _service;
 
-        public FoodController(CafeBookContext context)
+        public FoodController(FoodService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: Food
         public async Task<IActionResult> Index()
         {
-            var cafeBookContext = _context.Food.Include(f => f.FoodType);
-            return View(await cafeBookContext.ToListAsync());
+            var foods = await _service.GetFoods();
+            return View(foods);
         }
 
         // GET: Food/Details/5
@@ -34,9 +35,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var food = await _context.Food
-                .Include(f => f.FoodType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var food = await _service.DetailsFood(id);
             if (food == null)
             {
                 return NotFound();
@@ -48,7 +47,7 @@ namespace CafeBook.Controllers
         // GET: Food/Create
         public IActionResult Create()
         {
-            ViewData["FoodTypeId"] = new SelectList(_context.FoodType, "Id", "Id");
+            ViewData["FoodTypeId"] = new SelectList(_service.getFoodType(), "Id", "Id");
             return View();
         }
 
@@ -61,11 +60,10 @@ namespace CafeBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(food);
-                await _context.SaveChangesAsync();
+                await _service.AddAndSave(food);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FoodTypeId"] = new SelectList(_context.FoodType, "Id", "Id", food.FoodTypeId);
+            ViewData["FoodTypeId"] = new SelectList(_service.getFoodType(), "Id", "Id", food.FoodTypeId);
             return View(food);
         }
 
@@ -77,12 +75,12 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var food = await _context.Food.FindAsync(id);
+            var food = await _service.DetailsFood(id);
             if (food == null)
             {
                 return NotFound();
             }
-            ViewData["FoodTypeId"] = new SelectList(_context.FoodType, "Id", "Id", food.FoodTypeId);
+            ViewData["FoodTypeId"] = new SelectList(_service.getFoodType(), "Id", "Id", food.FoodTypeId);
             return View(food);
         }
 
@@ -102,8 +100,7 @@ namespace CafeBook.Controllers
             {
                 try
                 {
-                    _context.Update(food);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(food);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,7 +115,7 @@ namespace CafeBook.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FoodTypeId"] = new SelectList(_context.FoodType, "Id", "Id", food.FoodTypeId);
+            ViewData["FoodTypeId"] = new SelectList(_service.getFoodType(), "Id", "Id", food.FoodTypeId);
             return View(food);
         }
 
@@ -130,9 +127,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var food = await _context.Food
-                .Include(f => f.FoodType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var food = await _service.DetailsFood(id);
             if (food == null)
             {
                 return NotFound();
@@ -146,15 +141,14 @@ namespace CafeBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var food = await _context.Food.FindAsync(id);
-            _context.Food.Remove(food);
-            await _context.SaveChangesAsync();
+            var book = await _service.DetailsFood(id);
+            await _service.Delete(book);
             return RedirectToAction(nameof(Index));
         }
 
         private bool FoodExists(int id)
         {
-            return _context.Food.Any(e => e.Id == id);
+            return _service.FoodExis(id);
         }
     }
 }

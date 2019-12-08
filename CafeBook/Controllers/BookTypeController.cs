@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CafeBook.Data;
 using CafeBook.Models;
+using CafeBook.Services;
 
 namespace CafeBook.Controllers
 {
     public class BookTypeController : Controller
     {
-        private readonly CafeBookContext _context;
+        private readonly BookTypeService _service;
 
-        public BookTypeController(CafeBookContext context)
+        public BookTypeController(BookTypeService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: BookType
         public async Task<IActionResult> Index()
         {
-            return View(await _context.BookType.ToListAsync());
+            var bookType = await _service.GetBookTypes();
+            return View(bookType);
         }
 
         // GET: BookType/Details/5
@@ -33,8 +35,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var bookType = await _context.BookType
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var bookType = await _service.DetailsBookType(id);
             if (bookType == null)
             {
                 return NotFound();
@@ -58,8 +59,7 @@ namespace CafeBook.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bookType);
-                await _context.SaveChangesAsync();
+                await _service.AddAndSave(bookType);
                 return RedirectToAction(nameof(Index));
             }
             return View(bookType);
@@ -73,7 +73,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var bookType = await _context.BookType.FindAsync(id);
+            var bookType = await _service.DetailsBookType(id);
             if (bookType == null)
             {
                 return NotFound();
@@ -97,8 +97,7 @@ namespace CafeBook.Controllers
             {
                 try
                 {
-                    _context.Update(bookType);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(bookType);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +123,7 @@ namespace CafeBook.Controllers
                 return NotFound();
             }
 
-            var bookType = await _context.BookType
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var bookType = await _service.DetailsBookType(id);
             if (bookType == null)
             {
                 return NotFound();
@@ -139,15 +137,14 @@ namespace CafeBook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var bookType = await _context.BookType.FindAsync(id);
-            _context.BookType.Remove(bookType);
-            await _context.SaveChangesAsync();
+            var bookType = await _service.DetailsBookType(id);
+            await _service.Delete(bookType);
             return RedirectToAction(nameof(Index));
         }
 
         private bool BookTypeExists(int id)
         {
-            return _context.BookType.Any(e => e.Id == id);
+            return _service.BookTypeExis(id);
         }
     }
 }
