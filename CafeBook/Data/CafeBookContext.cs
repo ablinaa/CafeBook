@@ -1,12 +1,13 @@
 ﻿using System;
 using CafeBook.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CafeBook.Data
 {
-    public class CafeBookContext:DbContext
+    public class CafeBookContext : IdentityDbContext
     {
-        public CafeBookContext(DbContextOptions options):base(options)
+        public CafeBookContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -21,6 +22,7 @@ namespace CafeBook.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             //one to one
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Profile)

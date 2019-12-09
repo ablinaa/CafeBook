@@ -5,22 +5,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CafeBook.Models
 {
-    public class User
+    public class Login
     {
-        public int Id { get; set; }
-
         [Required]
         [EmailAddress]
-        [Remote(action:"VerifyLogin",controller:"User")]
-        public string Login { get; set; }
+        public string Email { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public Profile Profile { get; set; }
+        [Display(Name = "Remember me")]
+        public bool RememberMe { get; set; }
 
-        public Identity Identity { get; set; }
-
-        public List<RentSchedule> RentSchedule { get; set; }
     }
 }

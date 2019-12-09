@@ -8,12 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using CafeBook.Data;
 using CafeBook.Models;
 using CafeBook.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CafeBook.Controllers
 {
     public class BookController : Controller
     {
         private readonly BookService _bookService;
+
+        [TempData]
+        public string Message { get; set; }
+
         public BookController(BookService bookService)
         {
             _bookService = bookService;
@@ -23,6 +28,7 @@ namespace CafeBook.Controllers
         public async Task<IActionResult> Index()
         {
             var books = await _bookService.GetBook();
+            Message = $"Hello my friend in Book page";
             return View(books);
         }
 
@@ -44,6 +50,7 @@ namespace CafeBook.Controllers
         }
 
         // GET: Book/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["BookTypeId"] = new SelectList(_bookService.getBookType(), "Id", "Id");

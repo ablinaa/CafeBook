@@ -8,9 +8,11 @@ using CafeBook.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SignalRChat.Hubs;
 
 namespace CafeBook
 {
@@ -24,8 +26,16 @@ namespace CafeBook
             {
                 options.UseSqlite("Filename=cafebook.db"); 
             });
-
+            
             services.AddMvc();
+            services.AddSignalR();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(1000);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             services.AddScoped<UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -35,6 +45,8 @@ namespace CafeBook
 
             services.AddScoped<BookTypeService>();
             services.AddScoped<IBookTypeRepository, BookTypeRepository>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CafeBookContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,15 +56,23 @@ namespace CafeBook
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
 
-            app.UseRouting();
             app.UseStaticFiles();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseSession();
+            app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute( //
                     "default",    //
-                    "{controller=Users}/{action=Index}/{id?}"); //
+                    "{controller=Home}/{action=Index}/{id?}"); //
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }
