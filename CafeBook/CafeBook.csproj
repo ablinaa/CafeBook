@@ -19,6 +19,7 @@
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Administration\" />
     <Folder Include="Hubs\" />
+    <Folder Include="Views\Chat\" />
   </ItemGroup>
 
   <ItemGroup>
