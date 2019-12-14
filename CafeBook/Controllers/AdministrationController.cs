@@ -24,6 +24,12 @@ namespace CafeBook.Controllers
         }
 
         [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult CreateRole()
         {
             return View();
@@ -168,7 +174,7 @@ namespace CafeBook.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUsersInRole(List<UserRole> model, string roleId)
+        public async Task<IActionResult> EditUsersRole(List<UserRole> model, string roleId)
         {
             var role = await roleManager.FindByIdAsync(roleId);
 

@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model IEnumerable<CafeBook.Models.BookType>
+@model IEnumerable<CafeBook.Models.Book>
 @inject SignInManager<IdentityUser> SignInManager
 
 
@@ -9,7 +9,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">CafeBook</a>
+  <a class="navbar-brand" asp-controller="home" asp-action="Index">CafeBook</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -17,13 +17,13 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" asp-controller="home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" asp-controller="Chat" asp-action="Index">Chat</a>
+        <a class="nav-link" asp-controller="Chat" asp-action="Index">Milestone 06</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+       <li class="nav-item">
+        <a class="nav-link" asp-controller="administration" asp-action="Index">Admin</a>
       </li>
     </ul>
     <form method="post" asp-controller="account" asp-action="logout" class="form-inline my-2 my-lg-0">
@@ -43,21 +43,55 @@
 
 <div class="container">
     <div class="row" style="margin-top:20px;">
-        <div class="col-md-4">
-            <table>
-              <tbody>
-                @foreach (var item in Model) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                </tr>
-                }
-              </tbody>
-            </table>
+        <div class="col-md-2">
+            
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PublishedYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookType)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishedYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookType.Id)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-2">
             
         </div>
     </div>
