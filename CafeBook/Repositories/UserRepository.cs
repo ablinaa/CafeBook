@@ -33,7 +33,7 @@ namespace CafeBook.Repositories
             _context.Remove(user);
         }
 
-        public bool Exists(int id)
+        public bool Exists(string id)
         {
             return _context.User.Any(u => u.Id == id);
         }
@@ -43,7 +43,7 @@ namespace CafeBook.Repositories
             return _context.User.ToListAsync();
         }
 
-        public Task<User> GetDetails(int? id)
+        public Task<User> GetDetails(string? id)
         {
             return _context.User.FirstOrDefaultAsync(u => u.Id == id);
         }

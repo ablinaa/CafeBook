@@ -38,7 +38,7 @@ namespace CafeBook.Services
         //    return await _repository.GetDetails(id);
         //}
 
-        public bool Exist(int id)
+        public bool Exist(string id)
         {
             return _repository.Exists(id);
         }
@@ -48,7 +48,7 @@ namespace CafeBook.Services
             return await _repository.GetAllUser();
         }
 
-        internal async Task<User> GetDetails(int? id)
+        internal async Task<User> GetDetails(string? id)
         {
             return await _repository.GetDetails(id);
         }

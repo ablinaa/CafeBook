@@ -23,6 +23,7 @@ namespace CafeBook.Controllers
         // GET: /<controller>/
         public async Task<IActionResult> Index()
         {
+            
             var books = await _bookService.GetBook();
             return View(books);
         }

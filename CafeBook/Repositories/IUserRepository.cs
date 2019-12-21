@@ -11,10 +11,10 @@ namespace CafeBook.Repositories
         void Add(User user);
         void Update(User user);
         void Delete(User user);
-        bool Exists(int id);
+        bool Exists(string id);
         Task Save();
         Task<List<User>> GetAllUser();
         Task<List<User>> GetUsers(Expression<Func<User, bool>> predicate);
-        Task<User> GetDetails(int? id);
+        Task<User> GetDetails(string? id);
     }
 }

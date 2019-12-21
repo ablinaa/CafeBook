@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CafeBook.Data;
+using CafeBook.Models;
 using CafeBook.Repositories;
 using CafeBook.Services;
 using Microsoft.AspNetCore.Builder;
@@ -22,14 +23,23 @@ namespace CafeBook
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            
+
             services.AddDbContext<CafeBookContext>(options => 
             {
                 options.UseSqlite("Filename=cafebook.db"); 
             });
-            
+
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequiredUniqueChars = 3;
+                options.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<CafeBookContext>();
+
             services.AddMvc();
-            services.AddSignalR();
             services.AddDistributedMemoryCache();
+            services.AddSession();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(1000);
@@ -45,8 +55,15 @@ namespace CafeBook
 
             services.AddScoped<BookTypeService>();
             services.AddScoped<IBookTypeRepository, BookTypeRepository>();
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                            .AddEntityFrameworkStores<CafeBookContext>();
+
+            services.AddScoped<FoodService>();
+            services.AddScoped<IFoodRepository, FoodRepository>();
+
+            
+            services.AddRouting();
+            services.AddSignalR();
+            
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

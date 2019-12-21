@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace CafeBook.Models
 {
     public class Profile
@@ -9,7 +11,8 @@ namespace CafeBook.Models
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
         public User User { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using CafeBook.Attributes;
 
 namespace CafeBook.Models
@@ -16,7 +17,8 @@ namespace CafeBook.Models
         public DateTime ExpiryDate { get; set; }
         public string IssuedBy { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
         public User User { get; set; }
     }
 }

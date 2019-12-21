@@ -16,7 +16,7 @@ namespace CafeBookTests
         {
             var fakeRepo = Mock.Of<IUserRepository>();
             var userService = new UserService(fakeRepo);
-            var user = new User { Id = 1, Login = "qwer", Password = "qwer" };
+            var user = new User { Id = "1", Login = "qwer", Password = "qwer" };
             await userService.AddAndSave(user);
         }
 
@@ -25,7 +25,7 @@ namespace CafeBookTests
         {
             var fakeRepo = Mock.Of<IUserRepository>();
             var userService = new UserService(fakeRepo);
-            var user = new User { Id = 1, Login = "qwer", Password = "qwer" };
+            var user = new User { Id = "1", Login = "qwer", Password = "qwer" };
             await userService.Update(user);
         }
 
@@ -34,7 +34,7 @@ namespace CafeBookTests
         {
             var fakeRepo = Mock.Of<IUserRepository>();
             var userService = new UserService(fakeRepo);
-            var user = new User { Id = 1, Login = "qwer", Password = "qwer" };
+            var user = new User { Id = "1", Login = "qwer", Password = "qwer" };
             await userService.Delete(user);
         }
 
@@ -43,8 +43,8 @@ namespace CafeBookTests
         {
             var users = new List<User>
             {
-                new User{Id = 1, Login = "qwer", Password = "qwer" },
-                new User{Id = 2, Login = "qwerty", Password = "qwerty" }
+                new User{Id = "1", Login = "qwer", Password = "qwer" },
+                new User{Id = "2", Login = "qwerty", Password = "qwerty" }
             };
 
             var fakeRepo = new Mock<IUserRepository>();

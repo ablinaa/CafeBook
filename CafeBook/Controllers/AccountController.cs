@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CafeBook.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +14,24 @@ namespace CafeBook.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
         [TempData]
         public string Message { get; set; }
 
-        public AccountController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+        }
+
+        [Authorize(Roles = "Admin, Patient")]
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -38,7 +46,7 @@ namespace CafeBook.Controllers
             if (ModelState.IsValid)
             {
                 // Copy data from RegisterViewModel to IdentityUser
-                var user = new IdentityUser
+                var user = new User
                 {
                     UserName = model.Email,
                     Email = model.Email
@@ -84,17 +92,16 @@ namespace CafeBook.Controllers
                 if (result.Succeeded)
                 {
 
-                    if (!string.IsNullOrEmpty(returnUrl))
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
                     }
                     else
                     {
-                        if (string.IsNullOrEmpty(HttpContext.Session.GetString("smth")))
-                        {
-                            HttpContext.Session.SetString("smth", model.Email);
-                        }
-                        Message = $"Welcome {HttpContext.Session.GetString("smth")}!";
+                       
+                        HttpContext.Session.SetString("Some", model.Email);
+                       
+                        Message = $"Welcome {HttpContext.Session.GetString("Some")}!";
                         return RedirectToAction("index", "home");
                     }
 
@@ -109,6 +116,7 @@ namespace CafeBook.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            Message = "";
             await signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
         }

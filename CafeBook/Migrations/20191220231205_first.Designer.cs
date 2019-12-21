@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CafeBook.Migrations
 {
     [DbContext(typeof(CafeBookContext))]
-    [Migration("20191208163253_AddingIdentity")]
-    partial class AddingIdentity
+    [Migration("20191220231205_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -130,8 +130,8 @@ namespace CafeBook.Migrations
                     b.Property<string>("IssuedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -159,8 +159,8 @@ namespace CafeBook.Migrations
                     b.Property<string>("Surname")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -185,8 +185,8 @@ namespace CafeBook.Migrations
                     b.Property<DateTime>("DateOfReturn")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -195,24 +195,6 @@ namespace CafeBook.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RentSchedule");
-                });
-
-            modelBuilder.Entity("CafeBook.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -276,6 +258,10 @@ namespace CafeBook.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
@@ -326,6 +312,8 @@ namespace CafeBook.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -407,6 +395,21 @@ namespace CafeBook.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("CafeBook.Models.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
             modelBuilder.Entity("CafeBook.Models.Book", b =>
                 {
                     b.HasOne("CafeBook.Models.BookType", "BookType")
@@ -429,18 +432,14 @@ namespace CafeBook.Migrations
                 {
                     b.HasOne("CafeBook.Models.User", "User")
                         .WithOne("Identity")
-                        .HasForeignKey("CafeBook.Models.Identity", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CafeBook.Models.Identity", "UserId");
                 });
 
             modelBuilder.Entity("CafeBook.Models.Profile", b =>
                 {
                     b.HasOne("CafeBook.Models.User", "User")
                         .WithOne("Profile")
-                        .HasForeignKey("CafeBook.Models.Profile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CafeBook.Models.Profile", "UserId");
                 });
 
             modelBuilder.Entity("CafeBook.Models.RentSchedule", b =>
@@ -453,9 +452,7 @@ namespace CafeBook.Migrations
 
                     b.HasOne("CafeBook.Models.User", "User")
                         .WithMany("RentSchedule")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

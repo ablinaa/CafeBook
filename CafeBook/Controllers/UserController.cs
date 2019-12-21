@@ -28,7 +28,7 @@ namespace CafeBook.Controllers
         }
 
         // GET: User/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null)
             {
@@ -36,7 +36,6 @@ namespace CafeBook.Controllers
             }
 
             var user = await _service.GetDetails(id);
-
        
             if (user == null)
             {
@@ -68,7 +67,7 @@ namespace CafeBook.Controllers
         }
 
         // GET: User/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
             {
@@ -88,7 +87,7 @@ namespace CafeBook.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Login,Password")] User user)
         {
             if (id != user.Id)
             {
@@ -118,7 +117,7 @@ namespace CafeBook.Controllers
         }
 
         // GET: User/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
@@ -137,7 +136,7 @@ namespace CafeBook.Controllers
         // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _service.GetDetails(id);
             await _service.Delete(user);
@@ -145,7 +144,7 @@ namespace CafeBook.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(string id)
         {
             return _service.Exist(id);
         }

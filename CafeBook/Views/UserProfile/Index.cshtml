@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model CafeBook.Models.Profile
+@inject SignInManager<CafeBook.Models.User> SignInManager
+@inject SignInManager<CafeBook.Models.User> SignInManager
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" asp-controller="home" asp-action="Index">CafeBook</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" asp-controller="home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" asp-controller="Chat" asp-action="Index">Milestone 06</a>
+      </li>
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="administration" asp-action="Index">Admin</a>
+            </li>
+        }
+    </ul>
+
+    <form method="post" asp-controller="account" asp-action="logout" class="form-inline my-2 my-lg-0">
+       @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="nav-link" asp-controller="UserProfile" asp-action="Index">Profile</a>
+            <button type="submit" style="width:auto" class="nav-link btn btn-link py-0">Logout @User.Identity.Name</button>            
+        }
+        else
+        {
+            <a class="nav-link" asp-controller="account" asp-action="login">Login</a>
+            <a class="nav-link" asp-controller="account" asp-action="register">Register</a>
+        }
+    </form>
+   
+  </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row" style="height:100%">
+        <!--Анкета пользователя-->
+        <div class="col-3" style="">
+            <div style="width:80%; margin:0 auto; padding-top:30px">
+
+                <div class="card" style="width: 18rem;">
+                    <img src="data:image/jpeg;base64,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"
+                         class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@User.Identity.Name</h5>
+                        @if(Model!=null){
+                            <p class="card-text">
+                                Name: @Model.Name<br />
+                                Surname: @Model.Surname<br />
+                                PhoneNumber: @Model.PhoneNumber<br />
+                            </p>
+                        }
+                        else {
+                            <p class="card-text">Please edit your profile and identity</p>
+                        }
+
+                        <a asp-controller="UserProfile" asp-action="EditProfile" asp-route-id="@User" class="btn btn-primary btn-block">Edit Profile</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Список книг пользователя-->
+        <div class="col-9" style="padding:25px 30px 25px 30px">
+            <h2>My books</h2>
+
+        </div>
+
+    </div>
+</div>

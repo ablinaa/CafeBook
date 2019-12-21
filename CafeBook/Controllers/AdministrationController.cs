@@ -11,18 +11,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CafeBook.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<User> userManager;
 
-        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Index()
         {
@@ -136,7 +137,7 @@ namespace CafeBook.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditUsersRole(string roleId)
+        public async Task<IActionResult> EditUserRole(string roleId)
         {
             ViewBag.roleId = roleId;
 
@@ -174,7 +175,7 @@ namespace CafeBook.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUsersRole(List<UserRole> model, string roleId)
+        public async Task<IActionResult> EditUserRole(List<UserRole> model, string roleId)
         {
             var role = await roleManager.FindByIdAsync(roleId);
 
@@ -213,6 +214,34 @@ namespace CafeBook.Controllers
             }
 
             return RedirectToAction("EditRole", new { Id = roleId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            var role = await roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {id} cannot be found";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await roleManager.DeleteAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                return View("ListRoles");
+            }
         }
     }
 }

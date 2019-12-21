@@ -1,20 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model IEnumerable<CafeBook.Models.Book>
+@model CafeBook.Models.Profile
 @inject SignInManager<CafeBook.Models.User> SignInManager
 @inject SignInManager<CafeBook.Models.User> SignInManager
 
-<style>
-    .cont {
-    display: flex;
-    flex-wrap: wrap;
-    }
-    .cont_item:not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)) {
-        margin-top: 250px;
-    }
-    .cont_item:not(:nth-child(3n)){
-        margin-right: 100px;
-    }
-</style>
+
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -44,60 +33,50 @@
 
     <form method="post" asp-controller="account" asp-action="logout" class="form-inline my-2 my-lg-0">
        @if (SignInManager.IsSignedIn(User))
-       {
-           <a class="nav-link" asp-controller="UserProfile" asp-action="Index" asp-route-id="@User">Profile</a>
-           <button type="submit" style="width:auto" class="nav-link btn btn-link py-0">Logout @User.Identity.Name</button>
-       }
-       else
-       {
+        {
+            <a class="nav-link" asp-controller="UserProfile" asp-action="Index">Profile</a>
+            <button type="submit" style="width:auto" class="nav-link btn btn-link py-0">Logout @User.Identity.Name</button>            
+        }
+        else
+        {
             <a class="nav-link" asp-controller="account" asp-action="login">Login</a>
             <a class="nav-link" asp-controller="account" asp-action="register">Register</a>
-       }
+        }
     </form>
    
   </div>
 </nav>
 
-<div class="container-fluid">
-    <div class="row" style="margin-top:20px;">
-        <div class="col-md-2">
+<div class="container">
+    <div class="row">
+        <div class="col-4">
 
         </div>
-        <div class="col-md-8">
-            @{
-                if (TempData.Peek("Message") != null)
-                {
-                <h3 class="text-primary">@TempData.Peek("Message")</h3>
-                }
-                else
-                {
-                <h2 class="text-danger"></h2>
-                }
-            }
-        </div>
 
-        <div class="col-md-2">
-            <h3>@ViewBag.Some</h3>
-        </div>
-    </div>
-
-    <div class="row cont" style="width:80%; margin:0 auto;">
-
-        
-            @foreach (var item in Model) {
-                <div class="card cont_item" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.BookName)</h5>
-                        <p class="card-text">
-                            Author: @Html.DisplayFor(modelItem => item.Author)<br/>
-                            Published year: @Html.DisplayFor(modelItem => item.PublishedYear)<br/>
-                            Publisher: @Html.DisplayFor(modelItem => item.Publisher)<br />
-                        </p>
-                        <a href="#" class="btn btn-primary btn-block">Rent</a>
-                    </div>
+        <div class="col-4">
+            <form method="post" asp-controller="UserProfile"  asp-action="Create">
+               <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" asp-for="Name" class="form-control">
                 </div>
-            }
-       
+                <div class="form-group">
+                    <label>Surname</label>
+                    <input type="text" asp-for="Surname" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Phone number</label>
+                    <input type="number" asp-for="PhoneNumber" class="form-control">
+                </div>
+
+         
+
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </form>
+        </div>
+
+        <div class="col-4">
+
+        </div>
+
     </div>
 </div>

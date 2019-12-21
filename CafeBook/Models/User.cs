@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CafeBook.Models
 {
-    public class User
+    public class User:IdentityUser
     {
-        public int Id { get; set; }
-
+        
         [Required]
         [EmailAddress]
         [Remote(action:"VerifyLogin",controller:"User")]
